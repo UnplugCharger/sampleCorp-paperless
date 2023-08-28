@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	CompanyLogoFile = "./assets/logo.jpeg"
-	CompanyAddress  = "P.O Box 52868-00100, Nairobi, Kenya"
-	CompanyEmail    = "info@qwetupetroleum.com"
-	CompanyPhone    = "+254 722 253 775 | +255 684 123 735"
-	CompanyLocation = "45 Africa Reit,Karen Road,Karen,Nairobi"
-	CompanyPin      = "P051693104Y"
+	CompanyLogoFile = "./assets/dummy_logo.png"
+	CompanyAddress  = "P.O Box 13245-67890, RandomCity, RandomCountry"
+	CompanyEmail    = "contact@samplecorp.net"
+	CompanyPhone    = "+123 456 789 012 | +321 765 432 098"
+	CompanyLocation = "23 Sample St,RandomAve,RandomTown,RandomState"
+	CompanyPin      = "P987654321Z"
 )
 
 func PositionSignatoryAndBankDetailsAtBottom(pdf *gofpdf.Fpdf, signatory db.Signatory, bankInfo db.BankDetail) {
