@@ -68,6 +68,8 @@ func main() {
 
 	// Assuming your runTaskProcessor and runGinServer accept a store with pgxpool
 	go runTaskProcessor(store, redisOpts)
+	go runGrpcServer(conf, store)
+	go runGateWayServer(conf, store)
 	runGinServer(conf, store, taskDistributor)
 }
 func runGinServer(config utils.Config, store db.Store, taskDistributor workers.TaskDistributor) {
