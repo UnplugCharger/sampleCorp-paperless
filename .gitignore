@@ -7,6 +7,10 @@
 *.dll
 *.so
 *.dylib
+qwetu_backend_new
+qwetu_backend_new
+
+generated_files
 
 # Test binary, built with `go test -c`
 *.test
