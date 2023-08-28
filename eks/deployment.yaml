@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qwetu-petroleum-api-deployment
+  labels:
+    app: qwetu-petroleum-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qwetu-petroleum-api
+  template:
+    metadata:
+      labels:
+        app: qwetu-petroleum-api
+    spec:
+      containers:
+        - name: qwetu-petroleum-api
+          image: 024536371912.dkr.ecr.us-east-1.amazonaws.com/qwetu-petroleum-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090

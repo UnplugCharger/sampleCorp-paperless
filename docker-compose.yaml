@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: qwetu_petro_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  api:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+        - "8090:8090"
+    environment:
+      - DB_SOURCE=postgresql://root:password@postgres:5432/qwetu_petro_db?sslmode=disable
+    depends_on:
+        - postgres
+    entrypoint: [ "/app/wait.sh", "postgres:5432", "--" ]
+
+
+    command: ["/app/main"]
+
+volumes:
+    postgres-data:

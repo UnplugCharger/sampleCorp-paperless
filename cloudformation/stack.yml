@@ -1,0 +1,61 @@
+Resources:
+  MySecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow SSH access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+  MyEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      KeyName: qwetuPetro    # The name of the key pair to use
+      InstanceType: t2.micro  # The instance type
+      ImageId: ami-053b0d53c279acc90  # The ID of the AMI
+      SecurityGroups:
+        - !Ref MySecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          # Update the instance
+          yum update -y
+          # Install git
+          yum install git -y
+          # Install Go
+          wget https://golang.org/dl/go1.20.4.linux-amd64.tar.gz
+          tar -C /usr/local -xzf go1.20.4.linux-amd64.tar.gz
+          echo "export PATH=$PATH:/usr/local/go/bin" >> /etc/profile
+          source /etc/profile
+          # Install postgres
+          amazon-linux-extras install postgresql10 vim epel -y
+          # Start postgres
+          systemctl start postgresql
+          # Enable postgres so it starts on reboot
+          systemctl enable postgresql
+          # Ensure PostgreSQL is ready
+          until sudo -u postgres psql -c '\l'; do
+            echo "Waiting for PostgreSQL..."
+            sleep 1
+          done
+          # Create a database and user for your application (replace your_db and your_user with your actual db and user names)
+          sudo -u postgres psql -c "CREATE DATABASE qwetu_petro_db;"
+          sudo -u postgres psql -c "CREATE USER root WITH ENCRYPTED PASSWORD 'password';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE qwetu_petro_db TO root;"
+          # Install the AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          # Get the SSH key from Secrets Manager
+          aws secretsmanager get-secret-value --secret-id GithubSSHKey --query SecretString --output text > /root/.ssh/id_rsa
+          chmod 600 /root/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+          # Clone your repository
+          git clone git@github.com:Qwetu-Petroleum/Qwetu-backend.git
+          cd Qwetu-backend
+          # Build your application
+          go build
+          # Run your application
+          nohup ./your_application > app.log 2>&1 &

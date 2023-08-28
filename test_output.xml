@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="49">
+	<testsuite name="qwetu_petro" tests="0" failures="0" errors="0" id="0" hostname="xb" time="0.000" timestamp="2023-05-09T23:56:11+03:00"></testsuite>
+	<testsuite name="qwetu_petro/workers" tests="0" failures="0" errors="0" id="1" hostname="xb" time="0.000" timestamp="2023-05-09T23:56:11+03:00"></testsuite>
+	<testsuite name="qwetu_petro/api" tests="6" failures="0" errors="0" id="2" hostname="xb" time="0.000" timestamp="2023-05-09T23:56:11+03:00">
+		<testcase name="TestAuthMiddleware" classname="qwetu_petro/api" time="0.000"></testcase>
+		<testcase name="TestAuthMiddleware/OK" classname="qwetu_petro/api" time="0.000">
+			<system-out><![CDATA[NewServer---------------------------------->
+[GIN] 2023/05/09 - 22:34:46 | 200 |      24.345µs |                 | GET      "/auth"]]></system-out>
+		</testcase>
+		<testcase name="TestAuthMiddleware/NoAuthorization" classname="qwetu_petro/api" time="0.000">
+			<system-out><![CDATA[NewServer---------------------------------->
+[GIN] 2023/05/09 - 22:34:46 | 401 |       2.836µs |                 | GET      "/auth"]]></system-out>
+		</testcase>
+		<testcase name="TestAuthMiddleware/UnsupportedAuthorization" classname="qwetu_petro/api" time="0.000">
+			<system-out><![CDATA[NewServer---------------------------------->
+[GIN] 2023/05/09 - 22:34:46 | 401 |       2.545µs |                 | GET      "/auth"]]></system-out>
+		</testcase>
+		<testcase name="TestAuthMiddleware/InvalidAuthorizationFormat" classname="qwetu_petro/api" time="0.000">
+			<system-out><![CDATA[NewServer---------------------------------->
+[GIN] 2023/05/09 - 22:34:46 | 401 |       2.364µs |                 | GET      "/auth"]]></system-out>
+		</testcase>
+		<testcase name="TestAuthMiddleware/ExpiredToken" classname="qwetu_petro/api" time="0.000">
+			<system-out><![CDATA[NewServer---------------------------------->
+[GIN] 2023/05/09 - 22:34:46 | 401 |      24.947µs |                 | GET      "/auth"]]></system-out>
+		</testcase>
+	</testsuite>
+	<testsuite name="qwetu_petro/db/sqlc" tests="37" failures="0" errors="0" id="3" hostname="xb" time="0.290" timestamp="2023-05-09T23:56:11+03:00">
+		<testcase name="TestQueries_CreateBankDetails" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_GetBankDetailsByAccountNumber" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_ListBankDetailsByBankName" classname="qwetu_petro/db/sqlc" time="0.030"></testcase>
+		<testcase name="TestQueries_CreateCompany" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_DeleteCompanyByName" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_CreateInvoiceItem" classname="qwetu_petro/db/sqlc" time="0.020"></testcase>
+		<testcase name="TestQueries_GetInvoiceItemsByInvoiceID" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreateInvoice" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_GetInvoicesByPurchaseOrderNumber" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreatePettyCash" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreatePaymentRequest" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_UpdatePaymentRequest" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_ApprovePaymentRequest" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_DeletePaymentRequest" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_ListEmployeePaymentRequests" classname="qwetu_petro/db/sqlc" time="0.030"></testcase>
+		<testcase name="TestQueries_ListEmployeePettyCash" classname="qwetu_petro/db/sqlc" time="0.050"></testcase>
+		<testcase name="TestQueries_DeletePettyCash" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_UpdatePettyCash" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreatePurchaseOrderItem" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_GetPurchaseOrderItemsByPurchaseOrderID" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreatePurchaseOrder" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_CreateQuotationItem" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_GetQuotationItemsByQuotationID" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreateQuotation" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_CreateRole" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_GetRole" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_UpdateRole" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_DeleteRole" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_CreateSignatory" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_DeleteSignatoryByName" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_CreateUserRoles" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_GetUserRole" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_UpdateUserRole" classname="qwetu_petro/db/sqlc" time="0.010"></testcase>
+		<testcase name="TestQueries_CreateUser" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_GetUser" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_UpdateUser" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+		<testcase name="TestQueries_DeleteUser" classname="qwetu_petro/db/sqlc" time="0.000"></testcase>
+	</testsuite>
+	<testsuite name="qwetu_petro/token" tests="5" failures="0" errors="0" id="4" hostname="xb" time="0.000" timestamp="2023-05-09T23:56:11+03:00">
+		<testcase name="TestJwtMaker" classname="qwetu_petro/token" time="0.000"></testcase>
+		<testcase name="TestJwtExpired" classname="qwetu_petro/token" time="0.000"></testcase>
+		<testcase name="TestInvalidJwtTokenAlgoNone" classname="qwetu_petro/token" time="0.000"></testcase>
+		<testcase name="TestPasetoMaker" classname="qwetu_petro/token" time="0.000"></testcase>
+		<testcase name="TestPasetoExpired" classname="qwetu_petro/token" time="0.000"></testcase>
+	</testsuite>
+	<testsuite name="qwetu_petro/utils" tests="1" failures="0" errors="0" id="5" hostname="xb" time="0.200" timestamp="2023-05-09T23:56:11+03:00">
+		<testcase name="TestPassword" classname="qwetu_petro/utils" time="0.200"></testcase>
+	</testsuite>
+</testsuites>
