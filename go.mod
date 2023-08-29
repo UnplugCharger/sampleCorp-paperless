@@ -22,7 +22,7 @@ require (
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/lib/pq v1.10.9
 	github.com/newrelic/go-agent/v3 v3.24.1
-	github.com/newrelic/go-agent/v3/integrations/nrgin v1.2.0
+	github.com/newrelic/go-agent/v3/integrations/nrgin v1.2.1
 	github.com/o1egl/paseto v1.0.0
 	github.com/phpdave11/gofpdf v1.4.2
 	github.com/rs/zerolog v1.29.1
