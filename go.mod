@@ -25,7 +25,7 @@ require (
 	github.com/newrelic/go-agent/v3/integrations/nrgin v1.2.1
 	github.com/o1egl/paseto v1.0.0
 	github.com/phpdave11/gofpdf v1.4.2
-	github.com/rs/zerolog v1.29.1
+	github.com/rs/zerolog v1.30.0
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.12.0
