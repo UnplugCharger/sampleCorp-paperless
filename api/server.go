@@ -51,9 +51,9 @@ func (server *Server) Start(address string) error {
 
 	// handle https traffic in a goroutine
 	go func() {
-		if err := server.router.RunTLS(":443",
-			"/etc/letsencrypt/live/qwetu.api.isaacbyron.com/fullchain.pem",
-			"/etc/letsencrypt/live/qwetu.api.isaacbyron.com/privkey.pem"); err != nil {
+		if err := server.router.RunTLS(":8443",
+			"certs/cert.pem",
+			"certs/key.pem"); err != nil {
 			// Send the error to the error channel
 			errChan <- err
 		}

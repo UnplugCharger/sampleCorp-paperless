@@ -8,7 +8,7 @@
 *.so
 *.dylib
 qwetu_backend_new
-qwetu_backend_new
+qwetu_backend_old
 
 generated_files
 
@@ -23,3 +23,11 @@ generated_files
 
 # Go workspace file
 go.work
+
+# Logs 
+*.log
+
+# Certs 
+*.crt
+*.key
+*.pem

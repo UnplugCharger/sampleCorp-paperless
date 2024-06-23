@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -22,7 +23,7 @@ import (
 
 	"github.com/qwetu_petro/backend/api"
 
-	"github.com/rs/zerolog/log"
+	"github.com/qwetu_petro/backend/logger"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -30,16 +31,20 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
+var log = logger.NewLogger()
+
 func main() {
+
+	log := logger.NewLogger()
 	conf, err := utils.LoadConfig(".")
 	if err != nil {
-		log.Fatal().Err(err).Msg("Error loading config")
+		log.Fatal("could not load config")
 	}
 
 	// Use pgxpool for connection pooling
 	poolConfig, err := pgxpool.ParseConfig(conf.DBSource)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Error parsing pool config")
+		log.Fatal("Error parsing pool config")
 	}
 
 	// You can set pool configuration options here if needed
@@ -47,10 +52,10 @@ func main() {
 
 	connPool, err := pgxpool.ConnectConfig(context.Background(), poolConfig)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Error connecting to the database")
+		log.Fatal("Error connecting to the database")
 	}
 
-	log.Debug().Msg("migration string " + conf.MigrationUrl)
+	log.Debug("migration string " + conf.MigrationUrl)
 
 	// Assuming your runDbMigrations accepts a pgxpool
 	runDbMigrations(conf.MigrationUrl, conf.DBSource)
@@ -75,19 +80,19 @@ func main() {
 func runGinServer(config utils.Config, store db.Store, taskDistributor workers.TaskDistributor) {
 	server, err := api.NewServer(config, store, taskDistributor)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not create server")
+		log.Fatal("can not create server")
 	}
 
 	err = server.Start(config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not start server")
+		log.Fatal("can not start server")
 	}
 }
 
 func runGrpcServer(config utils.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not create server")
+		log.Fatal("can not create server")
 	}
 
 	grpcServer := grpc.NewServer()
@@ -96,12 +101,12 @@ func runGrpcServer(config utils.Config, store db.Store) {
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not start server")
+		log.Fatal("can not start server")
 	}
-	log.Info().Msg("Starting gRPC server at " + config.GRPCServerAddress)
+	log.Info("Starting gRPC server at " + config.GRPCServerAddress)
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not start  GRPC server")
+		log.Fatal("can not start  GRPC server")
 	}
 
 }
@@ -110,14 +115,14 @@ func runGrpcServer(config utils.Config, store db.Store) {
 func runGateWayServer(config utils.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not create server")
+		log.Fatal("can not create server")
 	}
 	grpcMux := runtime.NewServeMux()
 	cxt, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	err = pb.RegisterQwetuBackendGrpcServiceHandlerServer(cxt, grpcMux, server)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not create server")
+		log.Fatal("can not create server")
 	}
 
 	mux := http.NewServeMux()
@@ -125,12 +130,12 @@ func runGateWayServer(config utils.Config, store db.Store) {
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not start server")
+		log.Fatal("can not start server")
 	}
-	log.Info().Msg("Starting HTTP gateway server at " + config.GRPCServerAddress)
+	log.Info("Starting HTTP gateway server at " + config.GRPCServerAddress)
 	err = http.Serve(listener, mux)
 	if err != nil {
-		log.Fatal().Err(err).Msg("can not start  HTTP server")
+		log.Fatal("can not start  HTTP server")
 	}
 
 }
@@ -139,34 +144,34 @@ func runDbMigrations(path string, dbSource string) {
 	// Use pgx as a driver for database/sql
 	dB, err := sql.Open("pgx", dbSource)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to create *sql.DB instance")
+		log.Fatal("failed to create *sql.DB instance")
 	}
 	defer dB.Close()
 
 	driver, err := postgres.WithInstance(dB, &postgres.Config{})
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to create migration driver instance")
+		log.Fatal("failed to create migration driver instance")
 	}
 
 	migration, err := migrate.NewWithDatabaseInstance(path, "postgres", driver)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to create migration instance")
+		log.Fatal("failed to create migration instance")
 	}
 
-	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal().Err(err).Msg("failed to run migration")
+	if err = migration.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		log.Fatal("failed to run migration")
 	}
 
-	log.Info().Msg("Database migration successful")
+	log.Info("Database migration successful")
 }
 
 func runTaskProcessor(store db.Store, redisOpts asynq.RedisClientOpt) {
 	taskProcessor := workers.NewRedisTaskProcessor(redisOpts, store)
-	log.Info().Msg("Starting task processor ")
+	log.Info("Starting task processor ")
 
 	err := taskProcessor.Start()
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed  to start task processor")
+		log.Fatal("failed  to start task processor")
 	}
 
 }
